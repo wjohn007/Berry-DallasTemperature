@@ -200,19 +200,22 @@ class DallasTempBase
     register a temp-device with sensorID
     return: the cound/created TempDevice
     -# 
-    def register(sensorIdString,isTemp)
+    def register(sensorIdString,isScan)
         var cproc="register" 
     
-        var temp = isTemp == true
+        isScan = isScan == true
         var idBytes = bytes(sensorIdString)
         var device = self.findDevice(idBytes)
 
+        # sensor not exists
         if !device
             device = self.newDevice(idBytes)
-            device.isPreDefined=temp
+            # predefines are not possible from scan
+            device.isPreDefined=!isScan
             self.info(cproc,"new device:"+sensorIdString+" predefined:"+str(device.isPreDefined)) 
         else
-            if !isTemp
+            # sensor exists and no scan
+            if !isScan
                 device.isPreDefined=true
             end
             self.info(cproc,"device already exists:"+sensorIdString+" predefined:"+str(device.isPreDefined)) 

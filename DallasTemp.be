@@ -187,12 +187,12 @@ class DallasTemp : DallasTempBase
             # we got a result
             if self.scanResult
 
-                # only known devices are supported
+                # only known device-types are supported
                 var code=self.scanResult[self.DSROM_FAMILY]
                 if self.familySupported.find(code) !=nil
                     self.info(cproc,"found device :" + self.scanResult.tohex())  
 
-                    self.register(self.scanResult.tohex())
+                    self.register(self.scanResult.tohex(),true)
                 else  
                     self.info(cproc,"found unsupported device:"+self.scanResult.tohex())    
                 end
