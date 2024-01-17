@@ -62,6 +62,9 @@ class DallasTempBase
     static COUNT_PER_C     = 7
     static SCRATCHPAD_CRC  = 8
 
+    static RuleTempOffset = 2
+    static RuleSO8 = 3
+
     var gpio
     var webArgPrefix
     var enabled
@@ -82,6 +85,9 @@ class DallasTempBase
     var reqWaiterMax
     var scanResult
     var name
+
+    var tempOffsetDefault
+    var useFahrenheit
 
     #- called after all registered sensors are collected
        def (obj)
@@ -212,6 +218,7 @@ class DallasTempBase
             device = self.newDevice(idBytes)
             # predefines are not possible from scan
             device.isPreDefined=!isScan
+            device.offset = self.tempOffsetDefault
             self.info(cproc,"new device:"+sensorIdString+" predefined:"+str(device.isPreDefined)) 
         else
             # sensor exists and no scan
@@ -271,9 +278,16 @@ class DallasTempBase
 
     # destructor
     def deinit()
+        var cproc="deinit"
+
         if self.ow
             self.ow.deinit()
         end
+        
+        tasmota.remove_rule("TempOffset",self.RuleTempOffset)
+        tasmota.remove_rule("SetOption8",self.RuleSO8)
+
+        self.warn(cproc,"done")
     end
 
     # constructor
@@ -299,5 +313,22 @@ class DallasTempBase
         self.infoEnable = true
         self.info(cproc,"DallasTemp created using GPIO:" + str(self.gpio))
         self.infoEnable = false	
+
+        #-
+        tasmota.add_rule("TempRes",   
+            def(value,topic) if value!=nil self.tempRes = value end end
+            , self.RuleTempRes)
+        -#
+
+        tasmota.add_rule("TempOffset",
+            def(value,topic) if value!=nil self.tempOffsetDefault = value end end
+           , self.RuleTempOffset)
+
+        tasmota.add_rule("SetOption8",  
+            def(value,topic) self.useFahrenheit = tasmota.get_option(8)==1 end
+            , self.RuleSO8)
+
+        # trigger all rules
+        tasmota.cmd("Backlog TempOffset; so8")
 	end	
 end

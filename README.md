@@ -12,6 +12,8 @@ This application
 - each sensor value can be adjusted via offset
 - shows a nice UI with the sensor data and some controls
 - transmits the temperature-values ​​via sensor-message
+- support of SetOption8 (Fahrenheit/Celsius)
+- support of Command TempOffset (default offset for unregistered sensors)
 
 ## Motivation
 
@@ -77,8 +79,6 @@ device.name = "myDevice.02"
 device.offset = 1
 ```
 
-
-
 ### Enable Logging
 
 The berry-variable 'dallasTemp' is global.
@@ -117,6 +117,8 @@ If 'enableSensorMsg' is activated then the sensor messages will be extended like
 	"TempUnit": "C"
 }     
 ```
+
+The sensor value is calculated depending on 'SetOption8'.
 
 ### Fault detection
 

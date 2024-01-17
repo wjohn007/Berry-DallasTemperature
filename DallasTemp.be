@@ -30,11 +30,15 @@ class DallasTemp : DallasTempBase
     
         var temp = raw / 16.0
 
+        if self.useFahrenheit
+            temp = temp * 1.8 + 32 
+        end
+
         # check if callback is required
         if self.onValueUpdate
             try
                 var newTemp = self.onValueUpdate(self,tempDevice,temp)
-                if !newTemp
+                if newTemp !=nil
                     temp = newTemp
                 end
             except .. as exname, exmsg
@@ -185,7 +189,7 @@ class DallasTemp : DallasTempBase
             self.scanResult= self.ow.search()
 
             # we got a result
-            if self.scanResult
+            if self.scanResult!=nil
 
                 # only known device-types are supported
                 var code=self.scanResult[self.DSROM_FAMILY]
@@ -362,7 +366,7 @@ class DallasTemp : DallasTempBase
         end
 
         # update web-view for this instance
-        if self.onBuildWebView
+        if self.onBuildWebView != nil
             try
                 var html=tool.BerryStyle
                 html += self.onBuildWebView()
