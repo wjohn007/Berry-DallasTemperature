@@ -41,8 +41,6 @@ import tool
 # define types
 xload("git.be")
 xload("Libs.be")
-#xload("BaseClass.be")
-#xload("Manager.be")
 xload("DallasTempBase.be")
 xload("DallasTemp.be")
 
