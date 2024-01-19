@@ -226,20 +226,22 @@ class DallasTemp : DallasTempBase
         var cproc="setError"
 
         var errorChanged = device.hasError != hasError
+        var strDevice = device.address.tohex()
 
         if errorChanged
             if hasError 
                 device.hasError=hasError
-                self.warn(cproc,"error detected for device:"+device.address.tohex())
+                self.warn(cproc,"error detected for device: "+strDevice)
+
                 device.ignoreAfterError = self.IGNORE_AFTER_ERROR
             else
                 if device.ignoreAfterError >0 
                     device.ignoreAfterError = device.ignoreAfterError-1
                     errorChanged=false
-                    self.info(cproc,"decrement error counter:"+device.address.tohex()) 
+                    self.info(cproc,"decrement error counter for device: "+strDevice) 
                 else
                     device.hasError=hasError
-                    self.info(cproc,"error reset for device:"+device.address.tohex()) 
+                    self.info(cproc,"error reset for device: "+strDevice) 
                 end
             end
         end
@@ -267,6 +269,7 @@ class DallasTemp : DallasTempBase
     -#  
     def collect()
         var cproc="collect"
+        var lastPowerSupply=nil
 
         if self.reqWaiter <= 0
 
@@ -274,7 +277,7 @@ class DallasTemp : DallasTempBase
             if self.reqState == 0 && size(self.devices)>0 
                 self.reqState = 1
                 self.requestTemperatures()
-                self.info(cproc,"request temperature")
+                self.info(cproc,"request temperature ----------- ")
                 self.reqWaiter = self.reqWaiterMax   
 
             # state 1 :  calculate the temperatures
@@ -287,20 +290,25 @@ class DallasTemp : DallasTempBase
                 for device : self.devices
                     var error=false
                     var powerIsOk = false
+                    var strDevice = "device:"+device.address.tohex()
 
                     var readResult = self.readScratchPad(device)
 
-                    # if OK then check power supply
-                    if readResult==1
-                        powerIsOk = self.readPowerSupply(device) == 0xff
-                    end
+                    if readResult==1  # value is valid  
 
-                    if !powerIsOk         # wrong power-supply leads to wrong values
-                        self.setErrorAll()
-                        self.warn(cproc," read power-supply is bad, ignore value")
-                        break
+                        # if OK then check power supply
+                        lastPowerSupply= self.readPowerSupply(device)
+   
+                        if self.infoEnable
+                            self.info (cproc,"read power-supply result:"+string.format("%02X ",lastPowerSupply) + strDevice)
+                        end
 
-                    elif readResult==1         # value is valid             
+                        if lastPowerSupply != 0xff
+                            self.setErrorAll()
+                            self.warn(cproc,"ignore value due bad read power-supply "+strDevice)
+                            break
+                        end
+
                         self.calculateTemperature(device)  
 
                     elif readResult == 0 # no device on bus
@@ -309,15 +317,15 @@ class DallasTemp : DallasTempBase
                         break
 
                     elif readResult == -1
-                        self.warn(cproc,"got CRC error")
+                        self.warn(cproc,"got CRC error "+strDevice)
                         error = true
 
                     elif readResult == -2
-                        self.warn(cproc,"only 0x00 error")
+                        self.warn(cproc,"only 0x00 error "+strDevice)
                         error = true   
 
                     elif readResult == -3
-                        self.warn(cproc,"only 0xff error")
+                        self.warn(cproc,"only 0xff error "+strDevice)
                         error = true        
                     end
 

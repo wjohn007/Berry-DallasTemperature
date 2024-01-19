@@ -19,6 +19,10 @@ class TempDevice
         self.value = value + self.offset
     end
 
+    def isFake()
+        return  self.address[0]!=0x28 || self.address[5] !=0 || self.address[6]!=0 
+    end
+
     def init()
         self.hasError=false
         self.name="??"
@@ -149,7 +153,7 @@ class DallasTempBase
 	   #	parasiteMode = true;
        self.ow.reset()
 
-       self.info(cproc,result.tohex())
+       # self.info(cproc,result.tohex())
        return value
     end
 

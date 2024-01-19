@@ -25,8 +25,14 @@ set host=192.168.178.126
 if exist "%copyRoot%" (
 copy /y %copyRoot%\Common\Libs.be .
 copy /y %copyRoot%\Common\tool.be .
+
 copy /y %copyRoot%\AppDallasTemp\DallasTemp.be .
 copy /y %copyRoot%\AppDallasTemp\DallasTempBase.be .
+copy /y %copyRoot%\AppDallasTemp\DallasTemp01.be .
+copy /y %copyRoot%\AppDallasTemp\DallasTemp02.be .
+
+copy /y %copyRoot%\AppDallasTemp\testDallasTemp.be
+
 copy /y %copyRoot%\AppDallasTemp\README.md .
 copy /y %copyRoot%\AppDallasTemp\images\* .\images
 )

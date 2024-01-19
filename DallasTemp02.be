@@ -1,5 +1,6 @@
 # --- this script is processed, after components are created
 
+
 dallasTemp = DallasTemp("OneWire.Group.01",gpioForOneWire)
 dallasTemp.infoEnable=true
 
@@ -10,8 +11,8 @@ html=""
 
 dallasTemp.onBuildWebView = 
 def()
-  part1='<table class=berry><tbody><tr><th colspan=5>Temperatures</th></tr><tr><th>Name</th><th>Address</th><th>Offset [%s]</th><th>Valid</th><th>Value [%s]</th></tr>%s<tr><td><button id=owtemp_scan onclick=dola(this)>Scan 1-Wire-Bus</button></td><td><button id=owtemp_clear onclick=dola(this)>Clear list</button></td><td></td><td></td><td></td></tr></tbody></table>'
-  var ssi='<tr><td><span>%s</span></td><td><span>%s</span></td><td><span>%s</span></td><td><span>%s</span></td><td><span>%s</span></td></tr>'
+  part1='<table class=berry><tbody><tr><th colspan=5>Temperatures</th></tr><tr><th>Name</th><th>Address</th><th>Is Fake</th><th>Offset [%s]</th><th>Valid</th><th>Value [%s]</th></tr>%s<tr><td><button id=owtemp_scan onclick=dola(this)>Scan 1-Wire-Bus</button></td><td><button id=owtemp_clear onclick=dola(this)>Clear list</button></td><td></td><td></td><td></td><td></td></tr></tbody></table>'
+  var ssi='<tr><td><span>%s</span></td><td><span>%s</span></td><td><span>%s</span></td><td><span>%s</span></td><td><span>%s</span></td><td><span>%s</span></td></tr>'
 
   part2=""
   for device: dallasTemp.devices
@@ -19,6 +20,7 @@ def()
     part2+=string.format(ssi ,
        device.name,
        str(device.address.tohex()),
+       str(device.isFake()),
        str(device.offset),
        device.hasError ? "no": "yes",
        string.format("%5.2f",device.value))

@@ -14,6 +14,7 @@ This application
 - transmits the temperature-values ​​via sensor-message
 - support of SetOption8 (Fahrenheit/Celsius)
 - support of Command TempOffset (default offset for unregistered sensors)
+- detects faked sensors (not original Maxim)
 
 ## Motivation
 
@@ -122,5 +123,5 @@ The sensor value is calculated depending on 'SetOption8'.
 
 ### Fault detection
 
-- the application detects the error when GND/Power/Data pin is error.In this case, the status “hasError” is set to “true”.
+- The application detects the error when the GND/power/data pin is faulty. In this case, the status “hasError” is set to “true”.
 - After an error detection, 2 consecutive valid values ​​are required to reset the hasError flag.
