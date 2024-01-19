@@ -16,7 +16,6 @@ def()
 
   part2=""
   for device: dallasTemp.devices
-    # var device = dallasTemp.devices[0]
     part2+=string.format(ssi ,
        device.name,
        str(device.address.tohex()),
