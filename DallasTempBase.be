@@ -181,7 +181,7 @@ class DallasTempBase
         var device = TempDevice()
         device.address = idBytes
         device.name = "device-"+str(size(self.devices))
-
+        device.offset=0
         self.devices.push(device)
         return device
     end
@@ -317,7 +317,7 @@ class DallasTempBase
         self.infoEnable = true
         self.info(cproc,"DallasTemp created using GPIO:" + str(self.gpio))
         self.infoEnable = false	
-
+        self.tempOffsetDefault=0
         #-
         tasmota.add_rule("TempRes",   
             def(value,topic) if value!=nil self.tempRes = value end end

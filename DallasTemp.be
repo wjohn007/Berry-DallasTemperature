@@ -19,6 +19,8 @@ class DallasTemp : DallasTempBase
     def calculateTemperature(tempDevice)
         var cproc="calculateTemperature"
 
+        if self.infoEnable self.info(cproc,"start") end
+
         var msb = self.scratchPad[self.TEMP_MSB]
         var lsb = self.scratchPad[self.TEMP_LSB]
         var raw = (msb << 8) | lsb
@@ -37,6 +39,7 @@ class DallasTemp : DallasTempBase
         # check if callback is required
         if self.onValueUpdate
             try
+                if self.infoEnable self.info(cproc,"before on value update") end
                 var newTemp = self.onValueUpdate(self,tempDevice,temp)
                 if newTemp !=nil
                     temp = newTemp
@@ -46,6 +49,7 @@ class DallasTemp : DallasTempBase
             end   
         end
 
+        if self.infoEnable self.info(cproc,"before set temperature with ",str(temp)) end
         tempDevice.setTemperature(temp)
 
         if self.infoEnable
