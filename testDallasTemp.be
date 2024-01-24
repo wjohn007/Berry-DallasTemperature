@@ -8,6 +8,29 @@ assert(device.offset==0,"td.2")
 assert(device.hasError,"td.3")
 assert(!device.stateReported,"td.4")
 assert(!device.isPreDefined,"td.5")
+
+assert(device.ignoreAfterError==2,"td.7")
+assert(device.freezeOnError,"td.8")
+assert(device.value==nil,"td.9")
+
+device.setTemperature(33)
+assert(device.value==nil,"td.9")
+
+device.hasError=false
+device.setTemperature(33)
+assert(device.value==33,"td.10")
+
+# freeze is still active
+device.hasError=true
+device.setTemperature(44)
+assert(device.value==33,"td.11")
+
+device.hasError=true
+device.freezeOnError=false
+device.setTemperature(44)
+
+assert(device.value==44,"td.12")
+
 device=nil
 
 # -------- DallasTemp
@@ -16,14 +39,15 @@ gpioForOneWire = 23
 
 dt = DallasTemp("OneWire.01",gpioForOneWire)
 dt.infoEnable=true
-assert(dt.name=="OneWire.01","aa.1")
-assert(!dt.enabled,"aa.1a")
-assert(dt.gpio==gpioForOneWire,"aa.2")
-assert(dt.reqState==0,"aa.3")
-assert(dt.reqWaiterMax==3,"aa.4")
-assert(dt.reqWaiter==0,"aa.5")
-assert(dt.webArgPrefix=="owtemp","aa.6")
-assert(size(dt.devices)==0,"aa.7")
+assert(dt.name=="OneWire.01","dt.1")
+assert(!dt.enabled,"dt.1a")
+assert(dt.gpio==gpioForOneWire,"b.2")
+assert(dt.reqState==0,"b.3")
+assert(dt.reqWaiterMax==3,"dt.4")
+assert(dt.reqWaiter==0,"b.5")
+assert(dt.webArgPrefix=="owtemp","dt.6")
+assert(size(dt.devices)==0,"dt.7")
+assert(!dt.onJsonAppend,"tdtd.6")
 
 # --- Register
 
@@ -92,6 +116,8 @@ dt.onValueUpdate=def (dallas,device,temp)
     return temp
 end
 
+
+device.hasError=false
 dt.scratchPad = dataOK
 dt.calculateTemperature(device)
 assert(string.format("%5.2f",device.value)=="20.19","h.1")
@@ -106,6 +132,17 @@ assert(dt.json_append(),"i.2")
 
 # "OneWire.01":{"gpio":23,"devices":[{"address":"28111BAA20220994","name":"device-0","value":20.1875,"hasError":true}]}
 assert(string.find(dt.getJsonCommand(),"OneWire")>0,"i.2")
+
+# ------ onJsonAppend
+
+var jsString=""
+dt.onJsonAppend = def(obj,jsonString)
+   jsString=jsonString
+end
+
+dt.json_append()
+
+assert(size(jsString)>=10,"i.10")
 
 # --- Housekeeping
 

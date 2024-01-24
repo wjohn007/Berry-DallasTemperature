@@ -14,9 +14,12 @@ class TempDevice
     var stateReported
     var isPreDefined
     var ignoreAfterError
+    var freezeOnError
 
     def setTemperature(value)
-        self.value = value + self.offset
+        if !(self.hasError && self.freezeOnError)
+            self.value = value + self.offset
+        end
     end
 
     def isFake()
@@ -31,6 +34,7 @@ class TempDevice
         self.stateReported = false
         self.isPreDefined = false
         self.ignoreAfterError = 2
+        self.freezeOnError=true
     end
 end
 
@@ -92,6 +96,7 @@ class DallasTempBase
 
     var tempOffsetDefault
     var useFahrenheit
+    var onJsonAppend
 
     #- called after all registered sensors are collected
        def (obj)
@@ -270,9 +275,21 @@ class DallasTempBase
     # callback from tasmota driver manager
     def json_append()
         var cproc='json_append'
+
+        # callback required
+        if self.onJsonAppend
+            try
+                var json=self.getJsonAppend()
+                self.onJsonAppend(self,json)
+            except .. as exname, exmsg
+                self.warn(cproc, exname + " - " + exmsg)
+            end 
+        end
+
+        # sensor msg required ?
         if !self.enableSensorMsg return false end
-        # var ss = self.getJsonTeleperiod()
-        var ss=string.format("," + self.getJsonCommand())
+
+        var ss = "," + self.getJsonCommand()
         if ss 
             tasmota.response_append(ss) 
             return true

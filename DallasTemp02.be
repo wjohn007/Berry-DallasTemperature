@@ -1,5 +1,6 @@
 # --- this script is processed, after components are created
 
+# ========== DallasTemp ==========
 
 dallasTemp = DallasTemp("OneWire.Group.01",gpioForOneWire)
 dallasTemp.infoEnable=true
@@ -30,17 +31,12 @@ def()
   return html
 end
 
-#-  register existing devices
+# -  register existing devices
 
-device = dallasTemp.register("28111BAA20220994") 
+device = dallasTemp.register("283039370600009B") 
 device.name = "myDevice.01"
--#
-device = dallasTemp.register("28C9229E2022089E")
-device.name = "myDevice.02"
 device.offset = 0
-
-
-# perform autoscan at start
+device.freezeOnError = true # default value is true
 
 # get more logging info
 dallasTemp.infoEnable=true
@@ -50,3 +46,30 @@ dallasTemp.enableSensorMsg=true
 
 # start sensor scan
 dallasTemp.startScan()
+
+# ========== !!Thingspeak !!==========
+# uncomment following area to test the ThingSpeak-component
+
+#- 
+# create an instance
+thingSpeak = ThingSpeak()
+
+# let us see the logs
+thingSpeak.infoEnable=true
+
+# !!! put here the 'Write Api KEY' from ThingSpeak 
+thingSpeak.apiKey="your-api-key"
+
+# limit the data-rate
+thingSpeak.updatesPerHour(60)
+
+# use the callback of dallasTemp fired, when all sensors are acquired
+dallasTemp.onCollectingDone=def (dallasTemp)
+  if device && !device.hasError && tool.isNumber(device.value)
+     # this is all to do, write to field1 .. field8 the values of the channel
+     thingSpeak.field1=device.value 
+  end
+end
+-#
+
+

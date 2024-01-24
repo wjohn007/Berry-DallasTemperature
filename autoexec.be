@@ -28,7 +28,6 @@ def xload(name,useRoot)
     print("loaded",name," with result:"+str(result))   
 end
 
-
 print("autoexec - start with app-file:"+tasmotawd)
 
 # change to path where tapp files are located
@@ -41,6 +40,7 @@ import tool
 # define types
 xload("git.be")
 xload("Libs.be")
+xload("ThingSpeak.be")
 xload("DallasTempBase.be")
 xload("DallasTemp.be")
 

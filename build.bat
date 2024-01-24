@@ -25,6 +25,7 @@ set host=192.168.178.126
 if exist "%copyRoot%" (
 copy /y %copyRoot%\Common\Libs.be .
 copy /y %copyRoot%\Common\tool.be .
+copy /y %copyRoot%\Common\ThingSpeak.be .
 
 copy /y %copyRoot%\AppDallasTemp\DallasTemp.be .
 copy /y %copyRoot%\AppDallasTemp\DallasTempBase.be .
@@ -61,7 +62,7 @@ echo var gitInfo='%gitDate% - %gitHash% - %gitState%'>git.be
 set tool="C:\Program Files\7-Zip\7z.exe"
 set target=%curdir%\%appName%.tapp
 
-set commonFiles=Libs.be tool.be git.be DallasTempBase.be DallasTemp.be 
+set commonFiles=Libs.be tool.be git.be DallasTempBase.be DallasTemp.be ThingSpeak.be
 set appFiles=autoexec.be configure01.be configure02.be DallasTemp01.be DallasTemp02.be
 
 IF EXIST %target%  del %target%
