@@ -26,6 +26,8 @@ if exist "%copyRoot%" (
 copy /y %copyRoot%\Common\Libs.be .
 copy /y %copyRoot%\Common\tool.be .
 copy /y %copyRoot%\Common\ThingSpeak.be .
+copy /y %copyRoot%\Common\tests\testThingSpeak.be .
+
 
 copy /y %copyRoot%\AppDallasTemp\DallasTemp.be .
 copy /y %copyRoot%\AppDallasTemp\DallasTempBase.be .

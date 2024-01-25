@@ -1,6 +1,5 @@
 #-----------------------------------
-ThingSpeak
-
+ThingSpeak - a component to consume the cloud services of Mathlab
 -----------------------------------#
 
 import string
@@ -19,7 +18,6 @@ class ThingSpeak: DynClass
     var lastLogInfo
     var lastWarnInfo
     var lastLogProc
-    #var fields
 
     var apiKey # for channel
     var uri
@@ -47,7 +45,6 @@ class ThingSpeak: DynClass
     def addFields()
         var cproc="addFields"
 
-        #self.info(cproc,"start")
         var xmap = self.toMap()
 
         self.anyField=false
@@ -55,19 +52,13 @@ class ThingSpeak: DynClass
         for key : self.MAP.keys()
             # shortcut if value = nil
             var value = xmap[key]
-
             if value == nil
-                # if self.infoEnable self.info(cproc,"value is null for key:"+str(key)) end
                 continue
             end
 
             self.anyField=true
-            # &field1=%smTotalIn%
-
             self.uri += string.format("&%s=%s",key,value)
         end
-
-       # self.info(cproc,"done")
     end
 
     # clear the values of the thingspeak-fields
@@ -85,11 +76,10 @@ class ThingSpeak: DynClass
         self.clearFields()
     end
 
-    # writhe the field-valus to thingspeak-cloud
+    # write the field-valus to thingspeak-cloud
     def write()
         var cproc="write"
         var resp=200
-
    
         self.buildUri()
         if !self.anyField
@@ -97,9 +87,7 @@ class ThingSpeak: DynClass
             return -1
         end
 
-        if self.unitTest
-            resp=200
-        else
+        if !self.unitTest
             self.client.begin(self.uri)
             resp = self.client.GET()
             self.client.close()
@@ -109,21 +97,20 @@ class ThingSpeak: DynClass
         return resp
     end
 
-    # called every second or after processing of value
+    # is called every second by tasmota
     def every_second()
         var cproc="every_second"
 
         # check whether update has to be performed
         var millis = tasmota.millis()
         if millis >= self.nextUpdMillis
-            # self.info(cproc,"start with millis "+str(millis)+" waitSecs "+str(self.waitSecs))
             self.nextUpdMillis = millis + self.waitSecs*1000
             self.write()
         end
 
     end
 
-    # get the updates per hour
+    # define the updates per hour
     def updatesPerHour(value)
         var cproc="updatesPerHour"
         var xval = 3600 / value
@@ -161,7 +148,7 @@ class ThingSpeak: DynClass
         # uses tasmotas callback for second
         tasmota.add_driver(self)
 
-        self.infoEnable = false
+        self.infoEnable = true
         self.info(cproc,"created ThingSpeak: "+name)
         self.infoEnable = false
     end
