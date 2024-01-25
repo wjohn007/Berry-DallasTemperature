@@ -36,7 +36,7 @@ copy /y %copyRoot%\AppDallasTemp\DallasTemp02.be .
 
 copy /y %copyRoot%\AppDallasTemp\testDallasTemp.be
 
-copy /y %copyRoot%\AppDallasTemp\README.md .
+copy /y %copyRoot%\AppDallasTemp\Readme*.md .
 copy /y %copyRoot%\AppDallasTemp\images\* .\images
 )
 
