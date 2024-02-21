@@ -79,14 +79,14 @@ bc=nil
 
 #- playground
 
-var thingSpeak = ThingSpeak()
-thingSpeak.unitTest=true
+thingSpeak = ThingSpeak()
+# thingSpeak.unitTest=true
 thingSpeak.infoEnable=true
 thingSpeak.updatesPerHour(240)
 thingSpeak.apiKey="xxx"
 
 
-thingSpeak.field1 = 50
+thingSpeak.field1 = 1
 
 # wait a minute here
 

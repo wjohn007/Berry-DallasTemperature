@@ -13,6 +13,7 @@ tool.init = def (m)
         static BerryStyle='<style>table.berry {max-width:100%;table-layout: fixed;}table, th,td { border: 1px solid #f4f5f0; text-align: center; border-collapse: collapse;} </style>'
 
         var lastIsNumberResult
+        var lastIsBoolResult
         var lastJsonResult
         var lastLogInfo
         var lastWarnInfo
@@ -40,8 +41,29 @@ tool.init = def (m)
         function      checks whether value can be converted to a bool value
         returns       true, if value is convertible to a bool, false otherwise 
         -#
+        #-
         def isBool(value)
             return type(value)=='bool'
+        end
+        -#
+        def isBool(value)
+            self.lastIsBoolResult=nil
+
+            if value==nil return false end
+
+            var ss = string.format('{"value": %s}',string.tolower(str(value)))
+            var data = json.load(ss)
+        
+            if data==nil return false end
+        
+            var xval = data["value"]
+        
+            if type(xval)  == 'bool'
+                self.lastIsBoolResult =xval
+                return true
+            else
+                return false
+            end
         end
 
         #-

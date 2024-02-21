@@ -144,7 +144,7 @@ dt.json_append()
 
 assert(size(jsString)>=10,"i.10")
 
-# --- Housekeeping
+# --- cleanup
 
 dt.deinit()
 dt=nil

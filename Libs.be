@@ -5,6 +5,7 @@
 ------------------------------------#
 import string
 import json
+import undefined
 
 class DynClass
 
@@ -12,6 +13,11 @@ class DynClass
 
     def setmember(name, value)
         self.xmap[name] = value
+    end
+
+    def item(name)
+        if ! self.xmap.contains(name) return undefined end;
+        return self.xmap[name] 
     end
 
     def setitem(name,value)
@@ -89,6 +95,10 @@ class DynClass
         end
         return ymap
     end
+    
+    def tostring()
+        return str(self.toMap())
+    end
 
     def init()
         self.xmap = {}
@@ -149,3 +159,17 @@ class XAction
         self.callback = []
     end   
 end
+
+class XList : list
+
+    def has(value)
+        for val : self
+            if val == value
+                return true
+            end
+        end
+        return false
+    end
+
+end
+
