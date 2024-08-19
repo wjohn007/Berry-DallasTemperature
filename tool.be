@@ -1,5 +1,5 @@
 #-----------------------------------
-The module 'tool' impelments common functions
+The module 'tool' implements common functions
 ------------------------------------#
 import json
 import string
