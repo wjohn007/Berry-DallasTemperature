@@ -1,14 +1,8 @@
 #-----------------------------------
- dynamic class
-     Dynamically add members to a class at runtime.
-     Refer 'virtual members' https://berry.readthedocs.io/en/latest/source/en/Chapter-8.html#module-undefined   
+dynamic class implementation
 ------------------------------------#
-import string
-import json
-import undefined
-
+#@ solidify:DynClass
 class DynClass
-
     var xmap
 
     def setmember(name, value)
@@ -16,6 +10,7 @@ class DynClass
     end
 
     def item(name)
+        import undefined
         if ! self.xmap.contains(name) return undefined end;
         return self.xmap[name] 
     end
@@ -25,21 +20,27 @@ class DynClass
     end
 
     def member(name)
+        import undefined
         if self.xmap.contains(name)
             return self.xmap[name]
         else
-            import undefined
             return undefined
         end
     end
 
+    def contains(name)
+        return self.xmap.contains(name)
+    end
+
     # return members as json-string
     def toJson()
+        import json
         return json.dump(self.toMap())
     end
 
     # load new members from json-string
     def loadJson(jsonString)
+        import json
         var data = json.load(jsonString)
         self.loadMap(data)
     end
@@ -104,72 +105,3 @@ class DynClass
         self.xmap = {}
     end
 end
-
-#-----------------------------------
-this class implements the XAction class
-    XAction allows to bind multiple callbacks using th '+' operator
-    var action=XAction()
-    action += myCallback1  
-------------------------------------#
-class XAction 
-
-    var callback
-    var onAction
-
-    # define a new operator '+'
-    def +(other)
-        if type(other)!="function"
-            raise 'type_error','expect a function'
-        end
-
-        # if already defined
-        if self.callback.find(other)!=nil
-            return self
-        end
-
-        # print ("other:",str(other))
-        self.callback.push(other)
-        return self
-    end
-
-    def tostring()
-        return self.callback.tostring()
-    end
-
-    def doAction()
-      ## for xx:self.callback xx() end
-      if !self.onAction
-         return
-      end
-
-      for xx:self.callback 
-          self.onAction(self,xx)
-       end
-    end
-
-    def clear()
-        self.callback = []
-    end
-
-    def count()
-        return self.callback.size()
-    end
- 
-    def init()
-        self.callback = []
-    end   
-end
-
-class XList : list
-
-    def has(value)
-        for val : self
-            if val == value
-                return true
-            end
-        end
-        return false
-    end
-
-end
-

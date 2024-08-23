@@ -380,7 +380,7 @@ class DallasTemp : DallasTempBase
         # update web-view for this instance
         if self.onBuildWebView != nil
             try
-                var html=tool.BerryStyle
+                var html=xtool.BerryStyle
                 html += self.onBuildWebView()
                 webserver.content_send(html)
             except .. as exname, exmsg

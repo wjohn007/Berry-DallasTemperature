@@ -35,11 +35,11 @@ push_path()
 
 # no import your one module which is part of the tapp-file
 # this is the first time loaded in cache, so following 'import' commands can work
-import tool
+import xtool
 
 # define types
 xload("git.be")
-xload("Libs.be")
+xload("A01DynClass.be")
 xload("ThingSpeak.be")
 xload("DallasTempBase.be")
 xload("DallasTemp.be")
@@ -51,7 +51,11 @@ xload("configure01.be")
 xload(appName+"01.be",true)
 
 # shortcut for test device
-if tasmota.cmd("DeviceName")["DeviceName"] == "Tasmota Testing"
+hostname=tasmota.cmd("status 5")['StatusNET']['Hostname']
+ 
+# shortcut for test device
+isTestController = (hostname == "tasmota-AC2638-1592") || (hostname == "tasmota-635C38-7224") || (hostname == "tasmota-ke1-klappe-5312")
+if isTestController
   return
 end
 
