@@ -21,6 +21,7 @@ class XTool
     def init()
         self.infoEnable=false
         self.rebootWeeklyActivated=false
+        tasmota.add_driver(self)
     end
 
     def info(proc,info)

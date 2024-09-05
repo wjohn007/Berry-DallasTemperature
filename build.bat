@@ -5,6 +5,9 @@
 ::      -u : upload files to host
 ::      -r : restart host
 ::      -a : copy TAAP file to artifact folder
+::
+:: last update: 05.09.24
+::
 
 @echo off
 set curdir=%cd%
